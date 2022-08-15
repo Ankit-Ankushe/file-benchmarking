@@ -13,16 +13,19 @@ const server = http.createServer((req, res) => {
     if (req.url === '/') {
         // res.write('<h1>hello</h1>')
         result = '<h1>hello</h1>'
+        res.end(result)
     }
     else if (req.url === '/textsync') {
         const data = fs.readFileSync('file.txt')
         // res.write(data + '\n')
         result = data;
+        res.end(result)
     }
     else if (req.url === '/textasync') {
          fs.readFile('file.txt', (err, data) => {
             // res.write(data.toString())
             result = data
+            res.end(result)
         })
     }
     else if (req.url === '/textstream') {
@@ -35,6 +38,7 @@ const server = http.createServer((req, res) => {
          
          reader.on('end',function() {
             result = data;
+            res.end(result)
          });
          
          reader.on('error', function(err) {
@@ -52,14 +56,15 @@ const server = http.createServer((req, res) => {
         (async function() {
             try {
                 result = await open('file.txt');
+                res.end(result)
               } finally {
                 await filehandle?.close();
               }
           })
    }
-    res.write(result)
-    res.write('task done')
-    res.end()
+    // res.write(result)
+    // res.write('task done')
+    // res.end()
 })
 server.listen(port, () => {
     console.log(`server is listining on ${port}`)
